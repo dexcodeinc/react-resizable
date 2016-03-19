@@ -1,12 +1,13 @@
 module.exports = {
     context: __dirname,
     entry: [
-      "./test/test.js",
+      "./lib/index.js",
     ],
     output: {
-        path: __dirname + "/dist",
-        filename: "bundle.js",
-        sourceMapFilename: "[file].map",
+      filename: 'dist/react-resizable.js',
+      sourceMapFilename: "[file].map",
+      libraryTarget: 'umd',
+      library: 'ReactResizable'
     },
     externals: {
       'react': {

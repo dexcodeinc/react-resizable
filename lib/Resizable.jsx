@@ -40,6 +40,9 @@ export default class Resizable extends React.Component {
 
     // If true, will only allow width/height to move in lockstep
     lockAspectRatio: PropTypes.bool,
+    
+    // Resize direction, accept 'both', 'vertical', and 'horizontal'
+    direction: PropTypes.string,
 
     // Min/max size
     minConstraints: PropTypes.arrayOf(PropTypes.number),
@@ -57,6 +60,7 @@ export default class Resizable extends React.Component {
   static defaultProps =  {
     handleSize: [20, 20],
     lockAspectRatio: false,
+    direction: 'both',
     minConstraints: [20, 20],
     maxConstraints: [Infinity, Infinity]
   };
@@ -133,7 +137,10 @@ export default class Resizable extends React.Component {
   resizeHandler(handlerName: string): Function {
     return (e, {node, position}: DragCallbackData) => {
       const {deltaX, deltaY} = position;
-      let width = this.state.width + deltaX, height = this.state.height + deltaY;
+      let width = (this.props.direction != 'vertical') ? 
+        this.state.width + deltaX : this.state.width;
+      let height = (this.props.direction != 'horizontal') ? 
+        this.state.height + deltaY : this.state.height;
 
       // Early return if no change
       let widthChanged = width !== this.state.width, heightChanged = height !== this.state.height;
@@ -146,6 +153,9 @@ export default class Resizable extends React.Component {
       if (handlerName === 'onResizeStart') {
         newState.resizing = true;
       } else if (handlerName === 'onResizeStop') {
+        // Reset slack
+        newState.slackW = 0;
+        newState.slackH = 0;
         newState.resizing = false;
       } else {
         // Early return if no change after constraints
@@ -164,8 +174,8 @@ export default class Resizable extends React.Component {
   render(): React.Element {
     let p = this.props;
     let className = p.className ?
-      `${p.className} react-resizable`:
-      'react-resizable';
+      `${p.className} react-resizable react-resizable--${p.direction}`:
+      `react-resizable react-resizable--${p.direction}`;
 
     // What we're doing here is getting the child of this element, and cloning it with this element's props.
     // We are then defining its children as:

@@ -36,7 +36,7 @@ export default class ResizableBox extends React.Component {
     // If you use Resizable directly, you are responsible for updating the child component
     // with a new width and height.
     let {handleSize, onResizeStart, onResizeStop, draggableOpts,
-         minConstraints, maxConstraints, lockAspectRatio, ...props} = this.props;
+         direction, minConstraints, maxConstraints, lockAspectRatio, ...props} = this.props;
     return (
       <Resizable
         handleSize={handleSize}
@@ -46,6 +46,7 @@ export default class ResizableBox extends React.Component {
         onResize={this.onResize}
         onResizeStop={onResizeStop}
         draggableOpts={draggableOpts}
+        direction={direction}
         minConstraints={minConstraints}
         maxConstraints={maxConstraints}
         lockAspectRatio={lockAspectRatio}
